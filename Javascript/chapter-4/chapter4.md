@@ -12,6 +12,8 @@
 *** 传递参数 (sample-code-1.js)
 *** 检测类型 (sample-code-1.js)
 
+testing
+
 
 
 ** 执行环境 & 作用域
