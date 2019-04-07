@@ -15,7 +15,7 @@ Basic level：
 * Storage
 * Networking  
 
-！[Compare](https://pic002.cnblogs.com/images/2012/402771/2012121016091956.jpg "compare")  
+![Compare](https://pic002.cnblogs.com/images/2012/402771/2012121016091956.jpg "compare")  
 (The comparison of three models)
 
 ### Software as a service ###
