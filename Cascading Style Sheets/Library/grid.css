@@ -1,0 +1,183 @@
+/* 
+ * 1. There are two levels for grid system, conatiner -> item
+ * 2. veritical level is called row, horizontal level is called column
+ *
+ * List :
+ * (1) Display attribute
+ * (2) Grid-template-columns & Grid-template-rows
+ *     - Repeat function
+ *     - Auto-fill function
+ *     - Fr keyword 
+ *     - Minmax function
+ *     - Auto keyword
+ *     - Grid line name
+ * (3) Row-gap & Column-gap & Gap
+ * (4) Grid-template-areas
+ * (5) Grid-auto-flow
+ * (6) Justify-items & Align-items & Place-items
+ * (7) Justify-content & Align-content & Place-content 
+ * (8) Grid-auto-columns & Grid-auto-rows
+ * (9) Grid-column-start & Grid-column-end & Grid-row-start & Grid-row-end
+ * (10) Grid area
+ * (11) Justify-self & align-self & place-self
+
+ */
+
+
+/* Display attribute
+ *
+ * If we use grid, the style like [float], [inline-block], [veritical-align], [column-*] will be inactived.
+ */
+.elem-container--grid {
+    display: grid; /* Can use as [grid] or [inline-grid] */
+}
+
+/* Grid-template-columns & Grid-template-rows 
+ *
+ * grid-template-columns -> witch for each columns
+ * grid-template-rows -> height for each rows
+ */
+.elem-container--grid {
+    display: grid;
+    grid-template-columns: 100px 100px 100px;
+    grid-template-rows: 100px 100px 100px;
+}
+.elem-container--grid {
+    display: grid;
+    grid-template-columns: 33.33% 33.33% 33.33%;
+    grid-template-rows: 33.33% 33.33% 33.33%;
+}
+
+/* Repeat function */
+.elem-container--grid {
+    display: grid;
+    grid-template-columns: repeat(3, 33.33%);
+    grid-template-rows: repeat(3, 33.33%);
+}
+
+/* Auto-fill function 
+ * More like a function to auto fill the elements to one row as many as possible
+ */
+.elem-container--grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 100px);
+}
+
+/* Fr keyword 
+ * Set one item as a fixed width and others auto calculate
+ */
+.elem-container--grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+.elem-container--grid {
+    display: grid;
+    grid-template-columns: 150px 1fr 2fr;
+}
+
+/* Minmax function */
+.elem-container--grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr minmax(100px, 1fr);
+}
+
+/* Auto keyword */
+.elem-container--grid {
+    display: grid;
+    grid-template-columns: 100px auto 100px;
+}
+
+/* Grid line name */
+.elem-container--grid {
+    display: grid;
+    grid-template-columns: [c1] 100px [c2] 100px [c3] auto [c4];
+    grid-template-rows: [r1] 100px [r2] 100px [r3] auto [r4];
+}
+
+/* Row-gap & Column-gap & Gap 
+ * 
+ * row-gap -> the gap between each row
+ * column-gap -> the gap between each column
+ * gap : <grip-row-gap> <grid-column-gap>
+ */
+.elem-container--grid {
+    gap: 20px 20px;
+}
+
+/* Grid-template-areas */
+
+/* Grid-auto-flow 
+ * 
+ * row dense : first row then column
+ * column dense : first column then row
+ */
+.elem-container--grid {
+    grid-auto-flow: column; /* row | row dense | column dense */
+}
+
+/* Justify-items & Align-items & Place-items 
+ * stretch : pull to full
+ * place-items : <align-items> <justify-items>
+ */
+.elem-container--grid {
+    justify-items: start; /* start | end | center | stretch */
+    align-items: start; /* start | end | center | stretch */
+    place-items: start start;
+}
+
+/* Justify-content & Align-content & Place-content  
+ *
+ * space-evenly : each gap has the same width | space-around : just between each element
+ */
+.elem-container--grid {
+    justify-content: start; /* start | end | center | stretch | space-around | space-between | space-evenly */
+    align-content: start; /* start | end | center | stretch | space-around | space-between | space-evenly */
+    place-content: start start;
+}
+
+/* Grid-auto-columns & Grid-auto-rows 
+ *
+ * Used to fill the empty element. 
+ */
+.elem-container--grid {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-template-rows: repeat(3, 100px);
+    grid-auto-rows: 50px;
+}
+
+/* Grid-column-start & Grid-column-end & Grid-row-start & Grid-row-end 
+ * (For item only)
+ *
+ * grid-column-start : boarder-left position
+ * grid-column-end : boarder-right position
+ * grid-row-start : boarder-up position
+ * grid-row-end : boarder-bottom position
+ */
+.elem-container--grid__item-1 {
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 2;
+    grid-row-end: 4;
+}
+.elem-container--grid___item-2 {
+    grid-column-start: span 2; /* We can use span to cross the number of gap */
+}
+.elem-container--grid___item-3 {
+    grid-column: 1 / 3;
+    grid-row: 1 / 2;
+}
+
+/* Grid area */
+.elem-container--grid___item-4 {
+    grid-area: e; /* Set to position e */
+}
+.elem-container--grid___item-5 {
+    grid-area: 1 / 1 / 3 / 3; /* <row-start> | <column-start> | <row-end> | <column-end> */
+}
+
+/* Justify-self & align-self & place-self */
+.elem-container--grid {
+    justify-self: start; /* start | end | center | stretch */
+    align-self: start; /* start | end | center | stretch */
+}
