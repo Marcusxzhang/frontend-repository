@@ -12,9 +12,10 @@
 *** 传递参数 (sample-code-1.js)
 *** 检测类型 (sample-code-1.js)
 
-
+ASDASDASDASDASDASDASDASAS
 
 ** 执行环境 & 作用域
 
 
 ** 垃圾收集
+ASDASDASDASDASDAS
