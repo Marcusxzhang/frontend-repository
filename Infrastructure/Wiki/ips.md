@@ -1,6 +1,6 @@
 # IaaS, PaaS, SaaS #
 There are three models of cloud service: IaaS, PaaS, SaaS.
-![usage](https://qph.fs.quoracdn.net/main-qimg-bfa90d592a69b8fcbee52ccd8a8ed743-c "usage")
+![usage](https://qph.fs.quoracdn.net/main-qimg-bfa90d592a69b8fcbee52ccd8a8ed743-c "usage")  
 (The usage of three models)
 
 ## Structure ##
@@ -13,8 +13,9 @@ Basic level：
 * Virtualization
 * Servers
 * Storage
-* Networking
-！[Compare](https://pic002.cnblogs.com/images/2012/402771/2012121016091956.jpg "compare")
+* Networking  
+
+！[Compare](https://pic002.cnblogs.com/images/2012/402771/2012121016091956.jpg "compare")  
 (The comparison of three models)
 
 ### Software as a service ###
