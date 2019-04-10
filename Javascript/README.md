@@ -1,4 +1,4 @@
-# JavaScript 高级程序设计 （简化浓缩版）#
+# JavaScript 高级程序设计 （简化浓缩版） #
 ## 序 ##
 所有内容提炼自Javascript 高级程序设计第三版中文版 (Professional JavaScript for Web Developer 3rd edition)。一些专业名词我会参照英文版来重新设定。  
 作为学习材料，我更希望我一遍梳洗下来之后，用简单的一句话或者提炼出自认为精华句子写下来方便以后的查阅。如果需要更为详细的解读，需要翻阅原书。  
@@ -95,8 +95,83 @@ XHTML(Extensible HyperText Markup Language)。
 #### 用户代理检测 ####
 #### 小结 ####
 ## Chapter 10 : DOM ##
+DOM(Document Object Model)是针对HTML和XML的一个API。  
+值得注意的是，IE8之前的所有DOM都是COM。这意味着要特殊处理。
 #### 节点层次 ####
+总共有12种节点类型，都继承自一个基类型(base type)。  
+  
+**Node类型**  
+
+  
+**Document类型**  
+  
+**Element类型**  
+Element提供了对元素标签名，子节点及特性的访问。具有以下特征：  
+* nodeType的值为1
+* nodeName的值为元素的标签名
+* nodeValue的值为null
+* parentNode可能是Document或Element
+* child nodes可能是Element, Text, Comment, ProcessingInstruction, CDATASection或者EntityReference  
+  
+可以使用`nodeName`或者`tagName`来返回标签名。代码如[element-getTagName.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Javascript/chapter-10/element-getTagName.js)  
+  
+1. HTML元素  
+所有HTML元素都由HTMLElement类型表示，拥有下课标准特性：  
+* id: 元素的唯一标识符。
+* title: 附加说明信息，一般通过工具显示条显示出来。
+* lang: 语言代码，很少使用，一般用于Web Content Accessibility Guidelines。
+* dir: 语言的方向，ltr或者rtl，很少使用。
+* className: 与元素的class特性对应。  
+代码如[element-htmlexamples.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Javascript/chapter-10/element-htmlexamples.js)  
+  
+2. 取得特性  
+每个元素都有一个或者多个特性，操作特性的方法主要有三个：`getAttribute()`, `setAttribute()`, `removeAttribute()`。  
+根据HTML5的规范，自定义特性应该加上`data-*`前缀以便验证。不过值得注意的是，只有非自定义的属性才会以属性的形式添加到DOM对象。代码如[element-attribute-examples-2.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Javascript/chapter-10/element-attribute-examples.js)  
+  
+3. 设置特性  
+使用的方法是`setAttribute()`，这个方法接受两个参数：要设置的特性名和值。如`setAttribute("id", "someOtherId")`。该方法可以用来设定自定义特性。  
+若要移除特性值，可以使用`removeAttribute()`。  
+  
+4. attributes属性 
+Element类型是唯一一个DOM节点类型可以使用attributes属性。   
+NamedNodeMap对象拥有下列方法：  
+* getNamedItem(name): 返回nodeName属性等于name的节点。
+* removeNamedItem(name): 从列表中移除nodeName等于name的节点。
+* setNamedItem(node): 从列表中添加节点，以nodeName属性为索引。
+* item(pos): 返回位于数字pos位置的节点。  
+  
+nodeName就是特性的名称，nodeValue就是特性的值。详细代码请参照[element-attributes-namedNodeMap.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Javascript/chapter-10/element-attributes-namedNodeMap.js)。  
+
+但由于直接操作attributes属性不太方便。所以还是会使用`getAttribute()`, `removeAttribute()`和`setAttribute()`。 但如果想要做到遍历的话，attributes还是可以用的。值得注意的是，因为要兼容到ie7，所以我们要使用specified，这个值是用来判断是否设定了特性。代码请参考[element-attributes-grom.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Javascript/chapter-10/element-attributes-grom.js)  
+  
+5. 创造元素  
+使用`document.createElement()`方法可以创建新元素，参数为标签名。但是这个行为只是单纯的创造，并没有添加到HTML中去，所以要运用`appendChild()`, `insertBefore()`, `replaceChild()`来添加到HTML中。例如，`document.body.appendChild(div)`。  
+  
+6. 元素的子节点  
+元素的childNodes属性包含了它的所有子节点。但是因为其他浏览器(除ie以外)，会将空白符计算在内。所以如果要遍历子节点，最好先检查一下`nodeType`属性。代码如[element-attribute-checkNodeType.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Javascript/chapter-10/element-attribute-checkNodeType.js)。  
+同时也可以使用`getElementByTagName()`来返回直接子元素。  
+  
+**Text类型**  
+  
+**Comment类型**  
+  
+**CDATASection类型**  
+  
+**DocumentType类型**  
+  
+**DocumentFragment类型**  
+  
+**Attr类型**  
+  
 #### DOM操作技术 ####
+**动态脚本**  
+  
+**动态样式**  
+  
+**操作表格**  
+  
+**使用NodeList**  
+  
 #### 小结 ####
 ## Chapter 11 : DOM拓展 ##
 #### 选择符API ####
