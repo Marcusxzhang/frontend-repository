@@ -9,11 +9,41 @@
 #### JavaScript版本 ####
 #### 小结 ####
 ## Chapter 2 : 在HTML里面使用JavaScript ##
+为Web增加统一的脚本支持，也就是将JavaScript与HTML共存。
 #### script元素 ####
+在HTML中加入`<script>`元素，在这个tag里面有6个属性：   
+* async: 可选。
+* charset: 可选。src属性指定的代码的字符集。不过很少用。
+* defer: 可选。脚本可以延迟到文档完全被解析之后再执行，只对外部脚本文件有效。
+* language: （已废弃）
+* src: 可选。要执行代码的外部文件。
+* type: 可选。一般默认使用text/javascript  
+**标签的位置**
+按照惯例，所有`<script>`元素都应该放在`<head>`中。  
+但是这样的话就会产生先加载了脚本之后，再呈现内容，如果是重加载脚本的页面就会出现明显的延迟。  
+所以现代Web应用程序都将全部JavaScript文件放在`<body>`元素中内容后面。
+**延迟脚本**
+脚本会延迟到整个页面解析完毕后再运行。  
+按照规范要求，延迟脚本会按照顺序执行，且会先于DOMContentLoaded事件执行。但在现实中，却不一定按照顺序执行，所以最好只包含一个延迟脚本。  
+但是按照规范，要解析到`</html>`之后才执行延迟脚本，所以最好还是将延迟脚本放在页面底部。
+**异步脚本**
+与defer不同的是，标记为async的脚本不保证按照先后顺序执行。所以使用这个属性之前，要确定脚本之间互不依赖。  
+然后，因为async的目的是不让页面等待脚本下载与执行，从而异步加载其他内容。所以建议异步脚本不要在加载期间修改DOM。
+**在XHTML中的用法**
+XHTML(Extensible HyperText Markup Language)。  
+若要在XHTML中使用JavaScript代码块，type要设定为`application/xhtml+xml`。且在嵌入代码加入`<![CDATA[ code here ]]>`。
 #### 嵌入代码与外部文件 ####
+虽然嵌入代码或者引入外部文件都可以，但还是因为以下优点，比较推荐引用外部文件：  
+* 可维护性： 可以集中精神维护JavaScript文件。
+* 可缓存： 浏览器可以缓存所有外部的JavaScript文件。
+* 适应未来： HTML与XHTML包含外部文件的与法相同。
 #### 文档模式 ####
+详细的解释请参考[Doctype](https://www.w3schools.com/tags/tag_doctype.asp)  
+代码请参考[文件](https://www.google.com)。
 #### noscript元素 ####
-#### 小结 ####
+为了让不支持JavaScript的浏览器平稳的退化，创造了`<noscript>`元素。而`<noscript>`只有在下列情况在会出现：  
+* 浏览器不支持脚本。
+* 浏览器支持脚本，但是功能被禁用。
 ## Chapter 3 : 基本概念 ##
 #### 语法 ####
 #### 关键词与保留字 ####
