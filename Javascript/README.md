@@ -18,6 +18,7 @@
 * language: （已废弃）
 * src: 可选。要执行代码的外部文件。
 * type: 可选。一般默认使用text/javascript  
+
 **标签的位置**
 按照惯例，所有`<script>`元素都应该放在`<head>`中。  
 但是这样的话就会产生先加载了脚本之后，再呈现内容，如果是重加载脚本的页面就会出现明显的延迟。  
@@ -39,7 +40,7 @@ XHTML(Extensible HyperText Markup Language)。
 * 适应未来： HTML与XHTML包含外部文件的与法相同。
 #### 文档模式 ####
 详细的解释请参考[Doctype](https://www.w3schools.com/tags/tag_doctype.asp)  
-代码请参考[文件](https://www.google.com)。
+代码请参考[document-modes.html](https://github.com/Marcusxzhang/frontend-repository/blob/master/Javascript/chapter-2/document-modes.html)。
 #### noscript元素 ####
 为了让不支持JavaScript的浏览器平稳的退化，创造了`<noscript>`元素。而`<noscript>`只有在下列情况在会出现：  
 * 浏览器不支持脚本。
