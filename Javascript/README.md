@@ -19,30 +19,30 @@
 * src: 可选。要执行代码的外部文件。
 * type: 可选。一般默认使用text/javascript  
   
-**标签的位置**
+**标签的位置**  
 按照惯例，所有`<script>`元素都应该放在`<head>`中。  
 但是这样的话就会产生先加载了脚本之后，再呈现内容，如果是重加载脚本的页面就会出现明显的延迟。  
 所以现代Web应用程序都将全部JavaScript文件放在`<body>`元素中内容后面。  
   
-**延迟脚本**
+**延迟脚本**  
 脚本会延迟到整个页面解析完毕后再运行。  
 按照规范要求，延迟脚本会按照顺序执行，且会先于DOMContentLoaded事件执行。但在现实中，却不一定按照顺序执行，所以最好只包含一个延迟脚本。
 但是按照规范，要解析到`</html>`之后才执行延迟脚本，所以最好还是将延迟脚本放在页面底部。  
   
-**异步脚本**
+**异步脚本**  
 与defer不同的是，标记为async的脚本不保证按照先后顺序执行。所以使用这个属性之前，要确定脚本之间互不依赖。  
 然后，因为async的目的是不让页面等待脚本下载与执行，从而异步加载其他内容。所以建议异步脚本不要在加载期间修改DOM。  
   
-**延迟脚本**
+**延迟脚本**  
 脚本会延迟到整个页面解析完毕后再运行。  
 按照规范要求，延迟脚本会按照顺序执行，且会先于DOMContentLoaded事件执行。但在现实中，却不一定按照顺序执行，所以最好只包含一个延迟脚本。  
 但是按照规范，要解析到`</html>`之后才执行延迟脚本，所以最好还是将延迟脚本放在页面底部。  
   
-**异步脚本**
+**异步脚本**  
 与defer不同的是，标记为async的脚本不保证按照先后顺序执行。所以使用这个属性之前，要确定脚本之间互不依赖。  
 然后，因为async的目的是不让页面等待脚本下载与执行，从而异步加载其他内容。所以建议异步脚本不要在加载期间修改DOM。  
   
-**在XHTML中的用法**
+**在XHTML中的用法**  
 XHTML(Extensible HyperText Markup Language)。  
 若要在XHTML中使用JavaScript代码块，type要设定为`application/xhtml+xml`。且在嵌入代码加入`<![CDATA[ code here ]]>`。  
 #### 嵌入代码与外部文件 ####
@@ -135,13 +135,13 @@ Element提供了对元素标签名，子节点及特性的访问。具有以下�
   
 2. 取得特性  
 每个元素都有一个或者多个特性，操作特性的方法主要有三个：`getAttribute()`, `setAttribute()`, `removeAttribute()`。  
-根据HTML5的规范，自定义特性应该加上`data-*`前缀以便验证。不过值得注意的是，只有非自定义的属性才会以属性的形式添加到DOM对象。代码如[element-attribute-examples-2.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Javascript/chapter-10/element-attribute-examples.js)  
+根据HTML5的规范，自定义特性应该加上`data-*`前缀以便验证。不过值得注意的是，只有非自定义的属性才会以属性的形式添加到DOM对象。代码如[element-attribute-examples.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Javascript/chapter-10/element-attribute-examples.js)  
   
 3. 设置特性  
 使用的方法是`setAttribute()`，这个方法接受两个参数：要设置的特性名和值。如`setAttribute("id", "someOtherId")`。该方法可以用来设定自定义特性。  
 若要移除特性值，可以使用`removeAttribute()`。  
   
-4. attributes属性 
+4. attributes属性   
 Element类型是唯一一个DOM节点类型可以使用attributes属性。   
 NamedNodeMap对象拥有下列方法：  
 * getNamedItem(name): 返回nodeName属性等于name的节点。
@@ -238,10 +238,31 @@ nodeName就是特性的名称，nodeValue就是特性的值。详细代码请参
 #### 全面启用E4X ####
 #### 小结 ####
 ## Chapter 20 : JSON ##
+JSON, JavaScript Object Notation。它只是一种数据格式，不是一种编程语言。JSON发展于XML之后，发明的原因是因为XML被公认繁琐，亢长。
 #### 语法 ####
+JSON有三种类型的值：  
+* 简单值: 可以使用string, number, boolean和null。但不支持undefined。
+* 对象
+* 数组: 数组的值可以是任意类型——简单值, 对象或者数组。  
+  
+JSON不支持变量，函数或对象实例。
+**简单值**  
+JSON中的string类型必须使用双引号。  
+**对象**  
+**数组**  
 #### 解析与序列化 ####
+JSON之所以流行，是因为它可以解析为有用的JavaScript对象。  
+JSON对象有两个方法：`stringify()`和`parse()`，分别是把JavaScript对象序列化和将JSON字符串解析成JavaScript值。  
+  
+**序列化选项**  
+`JSON.stringify()`还要接受两个参数。第一个参数是过滤器(数组或者函数)，第二个是一个是否在JSON字符串中保留缩进。
+  
+**解析选项**
+`JSON.parse()`
 #### 小结 ####
-## Chapter 21 : AJAX与Comet##
+JSON可以用来表示对象，数组，字符串，数值，布尔值和null。  
+同时也可以用`JSON.stringify()`和`JSON.parse()`来序列化和解析。
+## Chapter 21 : AJAX与Comet ##
 #### XMLHttpRequest对象 ####
 #### XMLHttpRequest 2级 ####
 #### 进度事件 ####
