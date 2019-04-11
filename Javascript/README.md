@@ -240,7 +240,7 @@ nodeName就是特性的名称，nodeValue就是特性的值。详细代码请参
 ## Chapter 20 : JSON ##
 JSON, JavaScript Object Notation。它只是一种数据格式，不是一种编程语言。JSON发展于XML之后，发明的原因是因为XML被公认繁琐，亢长。
 #### 语法 ####
-JSON有三种类型的值：  
+JSON有三种类型的值：    
 * 简单值: 可以使用string, number, boolean和null。但不支持undefined。
 * 对象
 * 数组: 数组的值可以是任意类型——简单值, 对象或者数组。  
@@ -257,13 +257,57 @@ JSON对象有两个方法：`stringify()`和`parse()`，分别是把JavaScript�
 **序列化选项**  
 `JSON.stringify()`还要接受两个参数。第一个参数是过滤器(数组或者函数)，第二个是一个是否在JSON字符串中保留缩进。
   
-**解析选项**
-`JSON.parse()`
+**解析选项**  
+和`JSON.stringify()`不同，它的替换函数为replacer，而`JSON.parse()`的是还原函数。  
+我们可以加入函数到`JSON.parse()`里面，详细代码请参考[json-parse.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Javascript/chapter-20/json-parse.js)。  
+  
 #### 小结 ####
 JSON可以用来表示对象，数组，字符串，数值，布尔值和null。  
 同时也可以用`JSON.stringify()`和`JSON.parse()`来序列化和解析。
 ## Chapter 21 : AJAX与Comet ##
+AJAX，Asynchronous JavaScript + XML。其核心是XMLHttpRequest对象。
 #### XMLHttpRequest对象 ####
+**XHR的用法**  
+在使用XHR对象时，要调用的第一个方法是`open()`，他接受三个参数：请求的类型，请求的URL和是否要求异步发送。值得注意的是，这个方法不会发送请求，而是启动一个请求以备发送。需要发送的话，还需要调用`send()`方法。  
+如果不需要发送数据，则使用 `xhr.send(null)`便可。相应的数据会自动填充到XHR对象的属性：  
+* responseText: 响应主体被返回的文本。
+* responseXML: 如果响应内容是text/xml或者application/xml，这个属性会保存XML DOM文档。
+* status: 响应的HTTP状态。
+* statusText: HTTP状态的说明。  
+  
+与此同时，我们一般都会用异步的方式来不妨碍JavaScript的运行，那么我们就要检测XHR里的readyState属性，来得知当前活动阶段：  
+* 0: 未初始化。尚未调用`open()`。
+* 1: 启动。调用了`open()`，未调用`send()`。
+* 2: 发送。调用了`send()`，未接收到响应。
+* 3: 接受。已经收到了部分数据。
+* 4: 完成。完全收到了数据。  
+  
+每次readyState的属性值变化，都会触发readystatechange时间。  
+详细的代码如[xmlhttprequest-start.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Javascript/chapter-21/xmlhttprequest-start.js)  
+  
+若在请求过程中，想终止请求可以使用`xhr.abort()`。
+  
+**HTTP头部信息**  
+默认情况，发送XHR请求的同时，还会发送下列头部信息：  
+* Accept: 浏览器能够处理的内容类型。
+* Accept-Charset: 浏览器能显示的字符集。
+* Accept-Encoding: 浏览器能处理的压缩编码。
+* Accept-Language: 浏览器当前设置的语言。
+* Connection: 浏览器和服务器之间连接的类型。
+* Cookie: 当前页面设置的任何cookie。
+* Host: 发出请求的页面所在的域。
+* Referer: 发出请求的页面URL。
+* User-Agent: 浏览器的用户代理字符串。  
+  
+然后使用`setRequestHeader()`来设置头部信息， 接受两个参数：头部字段的名称和头部字段的值。详细的代码如[xmlhttprequest-header.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Javascript/chapter-21/xmlhttprequest-header.js)  
+  
+与此同时，我们可以使用`getResponseHeader()`来获取响应的内容。
+  
+**GET请求**  
+常用于向服务器查询某些信息，为了请求成功，要求每个参数的名称和值都必须使用encodeURIComponent()进行编码再放在URL的末尾。如`xhr.open("get", "example.php?name1=value1&name2=value2", ture);`。我们可以将这个功能进行函数封装，如[xmlhttprequest-get.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Javascript/chapter-21/xmlhttprequest-get.js)  
+  
+**POST请求**  
+常用于向服务器发送应该被保存的数据。为了让服务器将POST请求和Web表单的请求一视同仁，我们要先将`Content-Type`的头部信息改为`application/x-www-form-urlencoded`，同时也要将发送的数据进行序列化，可以用`serialize()`函数来创建这个字符串。详细的代码如[xmlhttprequest-post.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Javascript/chapter-21/xmlhttprequest-post.js)  
 #### XMLHttpRequest 2级 ####
 #### 进度事件 ####
 #### 跨源资源共享 ####
