@@ -194,6 +194,142 @@ public currentRace: any = {name: 'Random'};
 自定义管道参考[todo.html](https://www.google.com)。  
   
 ## 组件间通讯 ##
+将组件按照一定的规则进行相互通讯，才能构成一个有机的完整系统。组件之间有父子关系，兄弟关系和没有直接关系。相对应的，组件之间有以下几种典型的通讯方式：  
+* 直接的父子关系，父组件直接访问子组件的public属性和方法。
+* 直接的父子关系，借助@Input和@Output进行通讯。
+* 没有直接关系，借助Service单例进行通讯。
+* 利用cookie或者localstorage进行通讯
+* 利用Session进行通讯  
+无论什么前端框架，组件之间的通讯都离不开以上几种方案。  
+  
+本章主要内容：  
+* 直接调用
+* @Input和@Output
+* 利用Service单例进行通讯
+* 利用cookie或者localstorage进行通讯
+* 利用Session进行通讯  
+  
+#### 直接调用 ####
+
+```html
+<child #child></child>
+<button (click)="child.childFn()" class="btn btn-success">Call</button>
+```  
+显然，子组件必须要暴露一个public型的`childFn`方法以供调用。  
+```typescript
+public childFn():void {
+    console.log("The child name is : " + this.panelTitle);
+}
+```  
+如果要父组件调用子组件的实例，则需要用到`@ViewChild`装饰器。  
+```typescript
+@ViewChild(ChildComponent) private childComponent: ChildComponent;
+```  
+很明显，如果父组件直接访问子组件，那么这两个组件的关系就固定死了。相互依赖，谁也离不开谁，也就不能单独使用。**所以除非自己很清楚之间的关系，不然不要在父组件直接访问子组件的属性和方法**。
+
+#### @Input和@Output ####
+我们可以利用`@Input`装饰器，让父组件直接给子组件传递参数：  
+```typescript
+@Input() public panelTitle: string;
+```  
+父组件上可以这样写：  
+```html
+<child paneTitle="a new title"></child>
+```   
+与此同时，`@Output`的本质是事件机制，用来监听子组件上派发的事件。  
+```typescript
+@Output() public follow = new EventEmitter();
+```  
+触发follow事件的方式：  
+```typescript
+this.follow.emit("follow");
+```  
+父组件上面可以这样写来监听：  
+```html
+<child (follow)="doSomething()"></child>
+```  
+  
+#### 利用Service单例进行通讯 ####
+原理：  
+`Component_1`<--(依赖注入)--`Service`--(依赖注入)-->`Component_2`。  
+  
+如果在根模块（一般是app.module.ts）的providers里面注册了Service，那么这个Service就是全局单例。  
+* 比较粗暴的方式： 我们可以在Service里面定义public型的共享变量，然后让不同的组件都来访问这个变量达到共享数据。
+* 优雅一点的方式：利用RxJS，在Service里面定义一个public的Subject（主题），然后让所有的组件来Subscribe这个主题。
+  
+用作主线的代码如下：  
+```typescript
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+
+@Injectable()
+export class EventBusService {
+    public eventBus: Subject = new Subject();
+    constructor(){}
+}
+```  
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { EventBusService } from '../service/event-bus.service';
+
+@Component({
+    selector: "child-1",
+    templateUrl: "./child-1.component.html",
+    styleUrls: ['./child-1.component.scss']
+})
+
+export class Child1Component implements OnInit {
+    constructor(public eventBusService: EventBusService){}
+    ngOnInit(){}
+    public triggerEventBus(): void {
+        this.eventBusService.eventBus.next("trigger");
+    }
+}
+```  
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { EventBusService } from '../service/event-bus.service';
+
+@Component({
+    selector: "child-2",
+    templateUrl: "./child-2.component.html",
+    styleUrls: ['./child-2.component.scss']
+})
+
+export class Child2Component implements OnInit {
+    public events: Array = [];
+    constructor(public eventBusService: EventBusService){}
+    ngOnInit(){
+        this.eventBusService.eventBus.subscribe((value)=>{
+            this.events.push(value + "-" + new Date());
+        })
+    }
+}
+```  
+
+#### 利用cookie或者localstorage进行通讯 ####
+原理：  
+`Component_1`--(写入)-->`cookie或者localstorage`--(读取)-->`Component_2`。  
+  
+Component_1：  
+```typescript
+public writeData(): void {
+    window.localStorage.setItem("json", JSON.stringify({name:"a", age: 18}));
+}
+```  
+Component_2：  
+```typescript
+var json = window.localStorage.getItem("json");
+window.localStorage.removeItem("json");
+var obj = JSON.parse(json);
+console.log(obj.name);
+console.log(obj.age);
+```  
+  
+#### 利用Session进行通讯 ####
+同样的方法，也可以服务端处理Session请求。
+  
 ## 生命周期钩子 ##
 生命周期钩子的[官方文档](https://angular.io/guide/lifecycle-hooks)。  
 生命周期钩子的[浓缩版](https://angular.io/guide/lifecycle-hooks)。  
@@ -308,6 +444,14 @@ constructor(
 ## 自动化测试 ##
 ## 注射器树基础知识 ##
 ## Angular依赖注入的基本玩法 ##
+Angular的依赖注入机制十分强大，此章介绍三种最典型的场景：  
+* 全局单例模式的Service。
+* 多实例模式的Service。
+* 异步模块上的Service。  
+  
+#### 全局单例模式 #####
+#### 多实例模式 #####
+#### 异步模块 #####
 ## @Injectable & @Inject ##
 ## @Self装饰器 ##
 ## @Optional ##
