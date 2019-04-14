@@ -381,7 +381,83 @@ Zone.js实现原理是：当开发着调用这些函数的时候，是调用Zone
 ## 与Polymer封装组建的方式简单对比 ##
 ## 封装并发布组件库 ##
 ## 指令简介 ##
+根据Angular官方文档的描述，Angular有三种类型的指令：  
+* Component是Directive的子接口，是一种特殊的指令。Component可以带HTML模版，Directive不能。
+* 属性型指令：用来修改DOM元素的外观和行为，但不会改变DOM结构。如果打算封装自己的组件库，属性型指令是必备内容。
+* 结构型指令：可以修改DOM结构。  
+  
+那么既然有了组件，为什么还要指令？  
+根本原因是：**我们需要用指令来增强标签的功能，包括HTML原生标签和自己定义的标签**。  
+有了指令之后，我们就可以随自己喜好给标签扩展无限可能。  
+  
 ## 自定义指令 ##
+强烈建议仔细阅读官方文档的Directive[细节描述](https://angular.cn/guide/attribute-directives)。  
+  
+#### 官方指令 ####
+```typescript
+import { Directive, ElementRef, HostListener, HostBinding, Input } from '@angular/core';
+
+@Directive({
+    selector: '[my-high-light]'
+})
+
+export class MyHighLightDirective {
+    @Input() highlightColor: string;
+
+    constructor(
+        private el: ElementRef
+    ) {}
+
+    @HostListener('mouseenter') onMouseEnter() {
+        this.highlight(this.highlightColor);
+    }
+
+    @HostListener('mouseleave') onMouseLeave() {
+        this.highlight(null);
+    }
+
+    private highlight(color: string) {
+        this.el.nativeElement.style.backgroundColor = color;
+    }
+}
+```  
+核心代码为：  
+```html
+<p my-high-light highlightColor="#ff3300">Text</p>
+```
+  
+#### 自定义结构型指令 ####
+```typescript
+import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
+
+@Directive({
+    selector: '[appDelay]'
+})
+
+export class DelayDirective {
+    constructor(
+        private templateRef: TemplateRef<any>,
+        private viewContainerRef: ViewContainerRef
+    ) {}
+
+    @Input() set appDelay(time: number) {
+        setTimeout(() => {
+            this.viewContainerRef.createEmbeddedView(this.templateRef);
+        }, time);
+    }
+}
+```  
+指令的用法核心代码：  
+```html
+<div>
+    <card *appDelay="500 * item">
+        number {{item}} card
+    </card>
+</div>
+```  
+  
+值得注意的是，就算是自己定的指令，前面也会加星号。  
+  
 ## 直接在组件里面操作DOM ##
 ## 模块@NgModule ##
 ## 路由概述 ##
@@ -440,6 +516,8 @@ constructor(
 在Angular核心包里，最典型的一个服务就是[HTTP服务](https://angular.io/tutorial/toh-pt6)。  
   
 ## RxJS快速上手 ##
+Angular中关于Observable和RxJS的[资料](https://angular.cn/guide/observables)。  
+
 ## 国际化 ##
 ## 自动化测试 ##
 ## 注射器树基础知识 ##
@@ -450,9 +528,121 @@ Angular的依赖注入机制十分强大，此章介绍三种最典型的场景�
 * 异步模块上的Service。  
   
 #### 全局单例模式 #####
+假设我们有一个UserListComponent，会利用UserListService来加载数据。  
+在**UserListComponent**的构造函数里声明UserListService：  
+```typescript
+import { Component, OnInit } from '@angular/core';
+import { UserListService } from './service/user-list.service';
+
+@Component({
+    selector: 'user-list',
+    templateUrl: './user-list.component.html',
+    styleUrls: ['./user-list.component.scss']
+})
+
+export class UserListComponent implements OnInit {
+    public userList: Array<any>;
+
+    constructor(
+        public userListService: UserListService
+    ) {
+        console.log(this.userListService);
+    }
+
+    ngOnInit() {
+        this.userList = this.userListService.getUserList();
+    }
+}
+```  
+编写UserListService的具体实现：  
+```typescript
+import { Injectable } from '@angular/core';
+import { UUID } from 'angular2-uuid';
+
+@Injectable()
+export class UserListService {
+    private _id: string;
+
+    constructor() {
+        this._id = UUID.UUID();
+    }
+
+    public getUserList():Array<any> {
+        return [
+            {userName: 'marcus', age: 18},
+            {userName: 'marcus', age: 18},
+            {userName: 'marcus', age: 18}
+        ];
+    }
+
+    public getId(): string {
+        return this._id;
+    }
+}
+```  
+最后在根模块AppModule的providers里面定义UserListService。  
+  
 #### 多实例模式 #####
+如果在每个组件里面都配置了一个providers，那就不是单例模式了。每个组件都有独立的实例。  
+  
 #### 异步模块 #####
+以上都是同步模块，如果对于懒加载进来的异步模块，里面的providers只对本模块的成员可见。如果在其他模块里面引用异步模块里面配置的provider，会发生异常。  
+  
+##### 小结 #####
+Angular依赖注入的运行规则是：
+* 如果组件内部配置了providers，优先使用。
+* 否则向父层组件查找。
+* 一直查询到根模块AppModule里面的providers配置。
+* 如果没找到，就抛异常。
+* 同步模块配置的providers是全局可见的。
+* 异步模块配置的providers只对本模块的成员可见，Angular会为异步加载的模块创建独立的注射器。
+* 注射器的生命周期和组件的生命周期相同。
+  
 ## @Injectable & @Inject ##
+#### @Injectable —— 自动挡 ####
+在真实的应用中，我们常常需要去服务器中加载数据。这时候就要用到Angular的HttpClient服务了，所以通过上章内容，我们将HttpClient服务注射到UserListService服务里面去，代码如下：  
+```typescript
+import { Injectable } from '@angular/core';
+import { UUID } from 'angular2-uuid';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+
+@Injectable()
+export class UserListService {
+    private _id: string;
+
+    constructor(
+        private hc: HttpClient
+    ) {
+        this._id = UUID.UUID();
+    }
+
+    public getUserList(): Observable<Array<any>> {
+        return Observable.empty();
+    }
+
+    public getId(): string {
+        return this._id;
+    }
+}
+```  
+然后在`app.module`里面import HttpClientModule。  
+  
+其原理就是：如果一个Service里面需要依赖其他Service，则需要使用@Injectable装饰器进行装饰。所以为了不麻烦，最好所有的Service里面都加上@Injectable装饰器。  
+  
+#### @Inject —— 手动挡 ####
+如果需要走@Inject的方法，则代码要改成：  
+```typescript
+// ...
+constructor(
+    @Inject(HttpClient) private hc
+) {
+    this._id = UUID.UUID();
+}
+// ...
+```  
+可是通过编译得到，@Inject其实比@Injectable产生更多的代码，最后编译出来的文件体积会变大。  
+  
 ## @Self装饰器 ##
 ## @Optional ##
 ## @SkipSelf ##
