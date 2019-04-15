@@ -67,6 +67,40 @@ http://es6.ruanyifeng.com/#README
 #### 严格模式 ####
 #### name属性 ####
 #### 箭头函数 ####
+ES6允许使用箭头`=>`定义函数。  
+```javascript
+var f = v => v;
+// the same as
+var f = function(v) {
+    return v;
+}
+```  
+如果箭头函数不需要或者需要多个参数，就使用一个圆括号来代表参数部分。  
+```javascript
+var f = () => 5;
+// the same as
+var f = function() { return 5; };
+
+var sum = (num1, num2) => num1 + num2;
+// the same as
+var sum = function(num1, num2) {
+    return num1 + num2;
+}
+```  
+箭头函数的一个用处是**简化回调函数**。  
+```javascript
+[1, 2, 3].map(function(x) {
+    return x * x;
+});
+// the same as
+[1, 2, 3].map(x => x * x);
+```  
+  
+使用注意点：  
+* 函数体内的`this`对象，就是定义所在的对象，不是使用时所在的对象。
+* 不可以使用new命令。
+* 不可以使用`arguments`对象，如果要用，就用`rest`参数。
+* 不可以使用yield命令，所以剪头函数不能用作generator函数。
 #### 双冒号运算符 ####
 #### 尾调用优化 ####
 #### 函数参数的尾逗号 ####

@@ -517,7 +517,140 @@ constructor(
   
 ## RxJS快速上手 ##
 Angular中关于Observable和RxJS的[资料](https://angular.cn/guide/observables)。  
+  
+#### 回调地狱和Promise ####
+在以前的AJAX的调用过程中，在实际场景里，因为我们需要拿很多数据。所以我们经常会AJAX里面嵌套很多个AJAX，这样就会导致可读性差，时间长了根本无法维护。  
+而Promise的产生，主要就是为了解决这个问题：  
+```typescript
+new Promise(function(resolve, reject) {
+    // use resolve to return the data
+})
+.then(function(data) {
+    // some code
+})
+.then(function(data) {
+    // some code
+})
+.catch(function(reason) {
 
+});
+```  
+  
+#### RxJS与Promise的共同点 ####
+RxJS与Promise的共同点：  
+```typescript
+let promise = new Promise(resolve => {
+    setTimeout(() => {
+        resolve('promise timeout');
+    }, 2000);
+});
+promise.then(value => console.log(value));
+```  
+```typescript
+let stream$ = new Observable(observer => {
+    let timeout = setTimeout(() => {
+        observer.next('observer timeout');
+    }, 2000);
+    return () => {
+        clearTimeout(timeout);
+    }
+});
+let disposable = stream1$.subscribe(value => console.log(value));
+```  
+所以我们可以发现，RxJS和Promise的用法非常相似。Promise使用的是then()和resolve()，而RxJS用的是next()和subscribe()。  
+  
+#### RxJS与Promise的三大重要不同点 ####
+不同点：
+* 是否可以中途取消： RxJS(是) Promise(否)
+* 是否可以发射多个值： RxJS(是) Promise(否)
+* 是否有各种工具函数： RxJS(是) Promise(否)  
+  
+以下为实例代码：  
+1  
+```typescript
+let promise = new Promise(resolve => {
+    setTimeout(() => {
+        resolve('promise timeout.');
+    }, 2000);
+});
+promise.then(value => console.log(value));
+```  
+```typescript
+let stream1$ = new Observable(observer => {
+    let timeout = setTimeout(() => {
+        observer.next('observer timeout');
+    }, 2000);
+    return () => {
+        clearTimeout(timeout);
+    }
+});
+let disposable = stream1$.subscribe(value => console.log(value));
+setTimeout(() => {
+    disposable.unsubscribe();
+}, 1000);
+```  
+在上面的代码我们可以看到，Promise是不能撤回的。而在RxJS的世界里，是可以unsubscibe()方法来中途撤回，同时订阅者为0的时候，RxJS就不会触发。  
+  
+2  
+```typescript
+let stream2$ = new Observable<number>(observer => {
+    let count = 0;
+    let interval = setInterval(() => {
+        observer.next(count++);
+    }, 1000);
+    return () => {
+        clearInterval(interval);
+    }
+});
+stream2$.subscribe(value => console.log("Observable" + value));
+```  
+在上面的代码我们可以看到，我们用`setInterval`每隔一秒钟触发一个新的值，源源不断。Promise是做不到的，因为最终结果要么是`resolve`和`reject`。  
+    
+3  
+```typescript
+let stream2$ = new Observable<number>(observer => {
+    let count = 0;
+    let interval = setInterval(() => {
+        observer.next(count++);
+    }, 1000);
+    return () => {
+        clearInterval(interval);
+    }
+});
+stream2$.pipe(
+    filter(val => val % 2 == 0)
+).subscribe(value => console.log("filter>" + value));
+stream2$.pipe(
+    filter(value => value * value)
+).subscribe(value => console.log("map>" + value));
+```  
+在上面代码，我们用到两个工具函数： filter和map。  
+* filter的作用就是进行过滤。
+* map的作用就是对集合进行遍历。
+  
+#### 经典例子1： HTTP服务 ####
+```typescript
+this.http.get(url, { search: params }).pipe(
+    map((res: Response) => {
+        let result = res.json();
+        console.log(result);
+        return result;
+    }),
+    catchError((error: any) => Observable.throw(error || 'Server error'))
+);
+```
+  
+#### 经典例子2： 事件处理 ####
+```typescript
+this.searchTextStream.pipe(
+    debounceTime(500),
+    distinctUntilChanged()
+).subscribe(searchText => {
+    console.log(this.searchText);
+    this.loadData(this.searchText);
+});
+```  
+  
 ## 国际化 ##
 ## 自动化测试 ##
 ## 注射器树基础知识 ##
@@ -588,7 +721,7 @@ export class UserListService {
 #### 异步模块 #####
 以上都是同步模块，如果对于懒加载进来的异步模块，里面的providers只对本模块的成员可见。如果在其他模块里面引用异步模块里面配置的provider，会发生异常。  
   
-##### 小结 #####
+#### 小结 ####
 Angular依赖注入的运行规则是：
 * 如果组件内部配置了providers，优先使用。
 * 否则向父层组件查找。
