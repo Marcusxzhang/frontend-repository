@@ -375,9 +375,109 @@ Zone.js实现原理是：当开发着调用这些函数的时候，是调用Zone
 
 ## 组建特效 ##
 ## ShadowDOM组件 ##
+在Web Component里面，shadowDOM是重要的组成部分。在底层，Angular渲染组件的方式有以下三种：  
+* Native： 采用shadowDOM的模式来进行渲染。
+* Emulated： 模拟模式。对于不支持shadowDOM模式的浏览器，会用模拟的方法来渲染。**这是Angular默认的渲染模式**。
+* None：不采用任何方式。直接把组件的HTML结构和CSS样式插入到DOM流里面。这种方式比较容易造成组件之间出现CSS命名污染的问题。  
+  
+在定义组件时，可以通过`encapsilation`配置手动指定组件的渲染模式。  
+```typescript
+@Component({
+    selector: 'emulate-mode',
+    encapsilation: ViewEncapsulation,Emulated,
+    templateUrl: './emulate-mode.component.html',
+    styleUrls: ['./emulate-mode.component.scss']
+})
+```  
+  
+有以下几个注意点：
+* ShadowDOM模式的封装性更好，运行效率也更高。
+* 一般不需要自己手动设置组件的渲染模式。  
+  
 ## 内容投影 ##
+#### 投影一块内容 ####
+有时候开发的时候，希望里面的模块是可变的，而不是直接写死。那么内容投影机制就派上用场了，可以这样编写组件的模版。  
+```html
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <ng-content></ng-content>
+    </div>
+    <div class="panel-body">Body</div>
+    <div class="panel-footer">Footer</div>
+</div>
+```  
+请注意
+#### 投影多块内容 ####
+#### 投影一个复杂的组件 ####
+#### 内容投影这个特性存在的意义是什么 ####
 ## @ContentChild & @ContentChildren ##
+
 ## @ViewChild & @ViewChildren ##
+我们可以利用`@ViewChild`这个装饰器来操控直属的子组件。  
+```html
+<div class="panel panel-primary">
+    <div class="panel-heading"></div>
+    <div class="panel-body">
+        <child-one></child-one>
+    </div>
+</div>
+```  
+```typescript
+import { Component. OnInit, ViewChild, ViewChildren, QueryList } from '@angular/core';
+
+@ViewChild(ChildOneComponent) childOne: ChildOneComponent;
+
+// Call the children component in the cycle of ngAfterViewInit
+// ...
+ngAfterViewInit(): void {
+    console.log(this.childOne);
+    // use the function
+    this.childOne.helloEvent.subscribe((param) => {
+        console.log(this.childOne.title);
+    });
+}
+// ...
+```  
+```typescript
+@Input() public title: string = 'title';
+@Output() helloEvent: EventEmitter<string> = new EventEmitter<string>();
+public sayHello(): void {
+    this.helloEvent.emit('hello');
+}
+```  
+  
+  
+与此同时，我们也可以使用`@ViewChildren`，来获取一堆子组件。  
+```html
+<div class="panel panel-primary">
+    <div class="panel-heading">Father component</div>
+    <div class="panel-body">
+        <child-one></child-one>
+        <child-one></child-one>
+        <child-one></child-one>
+        <child-one></child-one>
+        <child-one></child-one>
+        <child-one></child-one>
+    </div>
+</div>
+```  
+```typescript
+import { COmponent, OnInit, ViewChild, ViewChildren, QueryList } from `@angular/core`;
+
+@ViewChildren(ChildOneComponent) children: QueryList<ChildOneComponent>;
+
+// Call the children component in the cycle of ngAfterViewInit
+// ...
+ngAfterViewInit(): void {
+    this.children.forEach((item) => {
+        item.helloEvent.subscribe((data) => {
+            console.log(data);
+        });
+    })
+}
+// ...
+```  
+  
 ## 与Polymer封装组建的方式简单对比 ##
 ## 封装并发布组件库 ##
 ## 指令简介 ##
