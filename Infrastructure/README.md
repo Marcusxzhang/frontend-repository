@@ -1,5 +1,8 @@
 # Infrastructure #
 
+## HTTP Request ##
+This is the [link](https://github.com/Marcusxzhang/frontend-repository/blob/master/Infrastructure/Wiki/http-request.md)
+
 ## Cloud computing ##
 This is the [link](https://github.com/Marcusxzhang/frontend-repository/blob/master/Infrastructure/Wiki/cloud-computing.md)
 
@@ -11,3 +14,4 @@ This is the [link](https://github.com/Marcusxzhang/frontend-repository/blob/mast
 
 ## cookie, session, token ##
 This is the [link](https://github.com/Marcusxzhang/frontend-repository/blob/master/Infrastructure/Wiki/cookie-session-token.md)
+
