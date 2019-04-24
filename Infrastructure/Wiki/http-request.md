@@ -85,11 +85,154 @@ xhr.setRequestHeader("Content-type","application/x-www-form-urlencoded");
 `var header = xhr.getResponseHeader(name);`  
   
 属性  
-
-
-#### ####
-#### ####
-#### ####
+`readyState`  
+用来表示`XMLHttpRequest`对象所处的状态。  
+  
+`status`  
+表示`http`请求的状态。  
+  
+`responseType`  
+表示响应的数据类型。  
+  
+`response`  
+返回相应的正文。  
+  
+`withCredentials`  
+ajax请求默认会携带同源请求的cookie，而跨域则不会携带。设置xhr的withCredentials为true将允许。  
+  
+事件回调  
+`onreadystatechange`  
+`xhr.onreadystatechange = callback`  
+当readystate属性发生变化时，callback会被触发。  
+  
+`onloadstart`  
+`xhr.onloadstart = callback`  
+在ajax请求发送之前，callback会被触发。  
+  
+`onprogress`  
+```javascript
+xhr.onprogress = function(event) {
+    console.log(event.loaded + " " + event.total);
+}
+```  
+可以获取总资源大小`total`和已经加载的资源大小`loaded`。  
+  
+`onload`  
+`xhr.onload = callback`  
+当完成加载时，将触发callback。  
+  
+异常处理  
+`onerror`  
+`xhr.onerror = callback`  
+当加载失败时会触发callback。  
+  
+`ontimeout`  
+`xhr.ontimeout = callback`  
+预期时间到期会触发callback。  
+  
+#### JQuery对AJAX的封装 ####
+```javascript
+$.ajax({
+    dataType:'json',
+    contentType:'application/json',
+    headers:{'Content-Type':'application/json'},
+    xhrFields:{withCredentials:true},
+    data:JSON.stringify({a:[{b:1, a:1}]}),
+    error:fucntion(xhr,status){
+        console.log(xhr, status);
+    },
+    success: function(data, status) {
+        console.log(data, status);
+    }
+})
+```  
+  
+![jquery](https://mmbiz.qpic.cn/mmbiz_png/aDoYvepE5x1qX2icp41PvbktBR9BQ8jJ8WnySQibAnZRQgsCyibF9gvvSatQic0iciaw4tfweDH1pdmsJSXVQQVJamwg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1 "jquery")  
+  
+常用配置  
+`url`  
+当前页地址，发送请求的地址。  
+  
+`type`  
+HTTP请求方法。  
+  
+`timeout`  
+设置请求超过时间。  
+  
+`success`  
+请求成功后的回调函数。  
+  
+`jsonp`  
+在一个jsonp请求中重写回调函数的名字。  
+  
+`error`  
+请求失败时调用此函数。  
+源码对错误的判定：  
+`isSuccess = status >= 200 && status < 300 || status === 304;`  
+  
+`dataType`  
+* `xml`： 返回xml文档
+* `html`： 返回纯文本HTML信息。
+* `script`返回纯文本JavaScript代码
+* `json`：返回json数据
+* `jsonp`：JSONP格式
+* `text`：返回纯文本字符串  
+  
+`data`  
+使用`JSON.stringify`转码。  
+  
+`complete`  
+请求完成后的回调函数。  
+  
+`async`  
+默认情况下所有的请求皆为异步请求。如果需要同步发送，设置为false。  
+  
+`contentType`  
+默认`application/x-www-form-urlcoded`。发送消息至服务器时内容编码类型。  
+  
+#### JQuery的替代者 ####
+FetchAPI是一个用于访问和操控HTTP管道的强大的原生API。但他还没被浏览器完全支持，仍然需要一个`polyfill`。  
+  
+#### fetch的使用 ####
+一个基本的fetch請求：  
+```javascript
+const options = {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({name:"123"}),
+    credentials:"same-origin",
+    mode:"cors"
+}
+fetch('http://www.xxx.com')
+.then(function(response){
+    return response.json();
+})
+.then(function(myJson){
+    console.log(myJson); // 相应数据
+})
+.catch(function(err){
+    console.log(err); // 异常处理
+})
+```  
+  
+![fetchapi](https://mmbiz.qpic.cn/mmbiz_png/aDoYvepE5x1qX2icp41PvbktBR9BQ8jJ8erRvsvhvSiaWfhOgQcVobc1gq7uk5Z8MibWxAibA6c8CZOEAffjZ51cJg/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1 "fetchAPI")  
+  
+`fetch()`  
+用于发起获取资源的请求，返回一个`promise`，会在resolve后传回`Response`对象。  
+  
+`Headers`  
+可以通过构造函数来创建一个`headers`对象：  
+```javascript
+var myHeaders = new Headers();
+myHeaders.append("Content-Type","text/plain")
+```  
+  
+`Request`  
+通过构造函数可以创建一个`Request`对象，这个对象可以作为`fetch`函数的第二个参数。
+  
+`Response`  
+在`fetch()`处理完`promise`之后返回一个`response`实例。  
+  
 #### fetch的坑点 ####
 由于`fetch`是一个非常底层的API，并没有进行很多封装，有以下问题：  
 * 不能直接传递JavaScript对象作为参数
