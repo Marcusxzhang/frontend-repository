@@ -561,13 +561,294 @@ export class DelayDirective {
 ## 直接在组件里面操作DOM ##
 ## 模块@NgModule ##
 ## 路由概述 ##
+Angular中的Router模块会负责模块的**加载**，**组件的初始化**，**销毁**等动作。  
+#### 前端为什么要路由 ####
+
+Router的本质是记录当前页面的状态，他与当前页面上的展示的内容一一对应。  
+在Angular里面，Router是一个独立的模块，定义在`@angular/router`模块里面，有以下重要的作用：  
+* Router可以配合NgModule进行模块的懒加载，预加载操作。
+* Router会管理组件的生命周期，他会负责创建，销毁组件。  
+  
+#### 服务端的配置 ####
+部署到真实的环境上前，需要配置一下Server才能很好的支持前端路由。  
+关于其他网络容器的部署，可参照[How to: Configure your server to work with html5Mode](https://github.com/angular-ui/ui-router/wiki/Frequently-Asked-Questions#how-to-configure-your-server-to-work-with-html5mode)  
+如Angular + Express环境：  
+```javascript
+var express = require('express');
+var app = express();
+
+app.use('/js', express.static(__dirname + '/js'));
+app.use('/dist', express.static(__dirname + '/../dist'));
+app.use('/css', express.static(__dirname + '/css'));
+app.use('/partials', express.static(__dirname + '/partials'));
+
+app.all('/*', function(req, res, next) {
+    // Just send the index.html for other files to support HTML5Mode
+    res.sendFile('index.html', { root: __dirname });
+});
+
+app.listen(3006); //the port you want to use
+```  
+  
 ## 路由的使用 ##
+app.module.ts里面首先需要import这个路由配置文件：  
+`import { appRoutes } from './app.routes';`  
+然后在`@NgModule`里面的imports配置内容如下：  
+`import { appRoutes } from './app.routes';`
+```javascript
+imports: [
+    BrowserModule,
+    RouterModule.forRoot(appRoutes,{enableTracing:true})
+]
+```  
+HTML模版里面的写法：  
+```javascript
+<a routerLink="home">xxx</a>
+<router-outlet></router-outlet>
+```  
+  
+这个例子的看点如下：  
+* 整个导航过程是通过`RouterModule`，`app.routes.ts`，`routerLink`，`router-outlet`这几个东西一起配合完成。
+* 请注意路由配置文件app.routes.ts里面的写法，里面全部用的component配置项，这种方式叫做**同步路由**。所有的组件都会被打包到一份js文件里面去。  
+  
+#### 路由与懒加载模块 ####
+为什么要模块的懒加载？  
+提升js文件的加载速度，提升js文件的执行效率。  
+  
+然后我们根据模块按照异步模式切开。  
+`xxx.module.ts`和`xxx.routes.ts`。  
+xxx.module.ts：  
+```javascript
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { HomeComponent } from './home.component';
+import { homeRoutes } from './home.routes';
+
+@NgModule({
+  declarations: [
+    HomeComponent
+  ],
+  imports: [
+    RouterModule.forChild(homeRoutes)
+  ],
+  providers: [],
+  bootstrap: []
+})
+export class HomeModule { }
+```  
+xxx.routes.ts  
+```javascript
+import { RouterModule } from '@angular/router';
+import { HomeComponent } from './home.component';
+
+export const homeRoutes=[
+    {
+        path:'',
+        component:HomeComponent
+    }
+];
+```  
+app.routes.ts  
+```javascript
+{
+    path:'home',
+    loadChildren:'./home/home.module#HomeModule'
+},
+```  
+  
+#### 共享模块 ####
+可以创建一个共享模块来切分一些共用的享用模块。然后import这个SharedModule就可以了。  
+  
+#### 处理路由事件 ####
+Angular的路由上面暴露了7个事件：  
+* NavigationStart
+* RoutesRecognized
+* RouteConfigLoadStart
+* RouteConfigLoadEnd
+* NavigationEnd
+* NavigationCancel
+* NavigationError  
+我们可以监听事件：  
+```javascript
+ngOnInit() {
+    this.router.events.subscribe((event) => {
+        console.log(event);
+        //可以用instanceof来判断事件的类型，然后去做你想要做的事情
+        console.log(event instanceof NavigationStart);
+    });
+}
+```  
+  
+#### 如何传递和获取路由参数 ####
+Angular的Router可以传递两种类型的数据：**简单类型的参数**，**矩阵式参数**。  
+
+#### 用代码触发路由导航 ####
+`this.router.navigate(["/jokes"],{ queryParams: { page: 1,name:222 } });`  
+接受参数的方式如下：  
+```javascript
+this.activeRoute.queryParams.subscribe(
+    (queryParam) => { console.log(queryParam) }
+);
+```  
+  
 ## 模块预加载 ##
 ## 路由守卫 ##
+实际开发过程中，我们需要限制某些URL的可访问性。比如，对于系统管理界面，只有那些拥有管理员权限的用户才能打开。  
+在Angular里面，权限控制的任务由**路由守卫**来负责。  
+* 控制路由能否激活
+* 控制路由能否退出
+* 控制异步模块能否被加载  
+  
+#### 控制路由能否激活 ####
+我们创建两个文件：auth.guard.ts和auth.service.ts。  
+  
+auth.guard.ts：  
+```javascript
+import { Injectable } from '@angular/core';
+import { CanLoad, CanActivate, CanActivateChild } from '@angular/router';
+import { AuthService } from './auth.service';
+
+@Injectable()
+export class AuthGuard implements CanLoad,CanActivate,CanActivateChild{
+
+    constructor(private authService:AuthService){
+
+    }
+
+    /**
+     * 验证路由是否可以激活
+     */
+    canActivate(){
+        //在真实的应用里面需要写一个 Service 到后端去验证权限
+        return this.authService.canActivate();
+    }
+
+    /**
+     * 验证子路由是否可以激活
+     */
+    canActivateChild(){
+        //在真实的应用里面需要写一个 Service 到后端去验证权限
+        return true;
+    }
+}
+```
+然后将服务注入到`app.module.ts`里面去：  
+`providers: [AuthService,AuthGuard]`  
+然后`app.routes.ts`里面这样配置：  
+```javascript
+{
+    path:'jokes',
+    data:{preload:true},
+    canActivate:[AuthGuard],
+    loadChildren:'./jokes/jokes.module#JokesModule'
+}
+```  
+  
+#### 控制路由能否退出 ####
+比如，客户在表单里面输入了大量内容，不小心导航到其他url，输入的内容就会全部丢失。  
+我们创建一个文件xxx-guard.ts：  
+```javascript
+import { Injectable } from '@angular/core';
+import { CanDeactivate } from '@angular/router';
+import { JokesComponent } from './jokes.component';
+
+@Injectable()
+export class JokesGuard implements CanDeactivate<any>{
+   canDeactivate(component:JokesComponent){
+       console.log(component);
+       if(!component.saved){
+           return window.confirm("确定不保存吗？");
+       }
+       return true;
+   }
+}
+```  
+  
+#### 控制异步模块能否被加载 ####
+在AuthGuard里面增加一个处理方法：  
+```javascript
+/**
+ * 验证是否有权限加载一个异步模块
+ */
+canLoad(){
+    //在真实的应用里面需要写一个 Service 到后端去验证权限
+    return this.authService.canLoad();
+}
+```  
+  
 ## 多重出口 ##
 ## 表单快速上手 ##
 ## 双向数据绑定 ##
+常见问题：  
+* 要想使用`[(ngModel)]`进行双向绑定，必须要在@NgModule里面定义`import FormsModule`模块
+* 必须给`<input>`设置name或者id
 ## 表单校验 ##
+表单校验一定会牵扯到正则表达式。  
+
+#### 状态标志位 ####
+Form，FormGroup，FormControl都有一些标识为可以使用，Angular定义了9个：  
+* valid 校验成功
+* invaild 校验失败
+* pending 表达正在提交过程中
+* pristine 数据依然处于原始状态，没有修改过
+* dirty 用户改过
+* touched 被触碰或者单击过
+* intouched 未被触碰或者单击过
+* enabled 启用状态
+* disabled 禁用状态
+  
+#### 内置校验规则 ####
+Angular一共内置了8中校验规则：  
+* required
+* requiredTrue
+* minLength
+* maxLength
+* pattern
+* nullValidator
+* compose
+* composeAsync  
+[API](https://angular.io/api/forms/Validators)    
+#### 自定义 ####
+```html
+<div *ngIf="!mobile.errors.ChineseMobileValidator">
+          请输入合法的手机号
+        </div>
+```  
+```javascript
+import { Directive, Input } from '@angular/core';
+import { Validator, AbstractControl, NG_VALIDATORS } from '@angular/forms';
+
+
+@Directive({
+    selector: '[ChineseMobileValidator]',
+    providers: [
+        {
+            provide: NG_VALIDATORS,
+            useExisting: ChineseMobileValidator,
+            multi: true
+        }
+    ]
+})
+export class ChineseMobileValidator implements Validator {
+    @Input() ChineseMobileValidator: string;
+
+    constructor() { }
+
+    validate(control: AbstractControl): { [error: string]: any } {
+        let val = control.value;        
+        let flag=/^1(3|4|5|7|8)\d{9}$/.test(val);
+        console.log(flag);
+        if(flag){
+            control.setErrors(null);
+            return null
+        }else{
+            control.setErrors({ChineseMobileValidator:false});
+            return {ChineseMobileValidator:false};
+        }
+    }
+}
+```  
+  
 ## 模型驱动型表单 ##
 ## 动态表单 ##
 ## 服务 ##
@@ -877,6 +1158,17 @@ constructor(
 可是通过编译得到，@Inject其实比@Injectable产生更多的代码，最后编译出来的文件体积会变大。  
   
 ## @Self装饰器 ##
+如果子组件没有配置providers，那么它就共享了父层的UserListService实例。如果子组件需要自己独立的实例，就要借助`@Self`装饰器。  
+#### @Self装饰器 ####
+我们在子组件加上`@Self`装饰器。  
+```javascript
+providers: [UserListService]
+// ...
+constructor(
+    @Self() public userListService: UserListService
+) {}
+```  
+  
 ## @Optional ##
 ## @SkipSelf ##
 ## @Host ##
