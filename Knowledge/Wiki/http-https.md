@@ -10,7 +10,7 @@ HTTPS主要作用是：
 * 对网站服务器进行真实身份认证。  
   
 当浏览器访问HTTPS通信有效的Web网站时，浏览器的地址栏内会出现一个带锁的标记。  
-！[https-logo](https://mmbiz.qpic.cn/mmbiz_png/zewrLkrYfsNPHHenibanG6wMyYBnOyCo7dicIujcArWCdN2aibWaJ6aibWmDRpHhW16A60NiawCjWKpd0s2HXP4lsXw/640 "https-logo")  
+![https-logo](https://mmbiz.qpic.cn/mmbiz_png/zewrLkrYfsNPHHenibanG6wMyYBnOyCo7dicIujcArWCdN2aibWaJ6aibWmDRpHhW16A60NiawCjWKpd0s2HXP4lsXw/640?wx_fmt=png&tp=webp&wxfrom=5&wx_lazy=1&wx_co=1 "https-logo")  
   
 ## 为什么需要HTTPS ##
 * HTTP报文使用明文（指未经过加密的报文）方式发送，
@@ -112,7 +112,7 @@ HTTPS协议的主要功能都是依赖于SSL/TSL协议，SSL/TSL的功能实现�
 
 ## HTTP 与 HTTPS 的区别 ##
 HTTP是明文传输协议，HTTPS是SSL+HTTP协议构建的可进行加密传输，身份认证的网络协议。  
-！[http-https](https://mmbiz.qpic.cn/mmbiz_png/zewrLkrYfsNPHHenibanG6wMyYBnOyCo7e7UB4WVI1Hiag11DnNslCnlGv2jTgg0SqXwZ1I3haJO8PMXAIc8rnPg/640 "http-https")  
+![http-https](https://mmbiz.qpic.cn/mmbiz_png/zewrLkrYfsNPHHenibanG6wMyYBnOyCo7e7UB4WVI1Hiag11DnNslCnlGv2jTgg0SqXwZ1I3haJO8PMXAIc8rnPg/640 "http-https")  
   
 详细如：  
 * HTTPS对搜索引擎更友好，利于SEO
