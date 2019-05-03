@@ -1,7 +1,7 @@
 # Knowledge #
 List:  
 * Frontend
-  * Frontend
+  * [JavaScript - Map, Reduce, Filter数组方法](https://github.com/Marcusxzhang/frontend-repository/blob/master/Knowledge/Wiki/map-reduce-filter.md)
 * Network
   * [HTTP Request](https://github.com/Marcusxzhang/frontend-repository/blob/master/Knowledge/Wiki/http-request.md)
   * [为什么 HTTPS 比 HTTP 更安全?](https://github.com/Marcusxzhang/frontend-repository/blob/master/Knowledge/Wiki/http-https.md)
