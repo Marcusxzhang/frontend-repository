@@ -27,7 +27,7 @@ Vue可以在使用其他很好的第三方库。
   
 代码：  
 [index.html](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-1/index.html)  
-[app.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-1/app.html)  
+[app.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-1/app.js)  
   
 ## 数据和方法 ##
 可以直接在`methods`里面定义函数，来实现想要实现的功能。  
@@ -36,7 +36,7 @@ Vue可以在使用其他很好的第三方库。
   
 代码：  
 [index.html](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-2/index.html)  
-[app.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-2/app.html)  
+[app.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-2/app.js)  
   
 ## 数据绑定 ##
 ## 属性绑定 ##
@@ -48,7 +48,7 @@ Vue可以在使用其他很好的第三方库。
   
 代码：  
 [index.html](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-3/index.html)  
-[app.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-3/app.html)  
+[app.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-3/app.js)  
   
 ## 事件（点击 双击 鼠标事件）##
 如果要绑定事件，则使用`v-on:click="..."`。  
@@ -60,7 +60,7 @@ Vue可以在使用其他很好的第三方库。
   
 代码：  
 [index.html](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-4/index.html)  
-[app.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-4/app.html)  
+[app.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-4/app.js)  
   
 ## 事件修饰符（once prev stop） ##
 为了做到**方法只有纯粹的数据逻辑，而不是去处理DOM事件细节**，我们可以运用事件修饰符，来为`v-on`添加事件修饰符。  
@@ -74,7 +74,7 @@ Vue可以在使用其他很好的第三方库。
   
 代码：  
 [index.html](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-5/index.html)  
-[app.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-5/app.html)  
+[app.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-5/app.js)  
   
 ## 键盘事件及键值修饰符（alt enter） ##
 值得注意的是，`keyCode`的事件用法已经被废弃了，可能不会被最新的浏览器支持。  
@@ -91,7 +91,7 @@ Vue可以在使用其他很好的第三方库。
   
 代码：  
 [index.html](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-6/index.html)  
-[app.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-6/app.html)  
+[app.js](https://github.com/Marcusxzhang/frontend-repository/blob/master/Vue/tutorial/code/chapter-6/app.js)  
   
 ## 双向数据绑定 ##
 ## 计算属性Computed ##
