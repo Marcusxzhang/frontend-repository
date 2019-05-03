@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue.js</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        #canvas {
+            width: 100px;
+            height: 100px;
+            padding: 100px 200px;
+            text-align: center;
+            background: grey;
+        }
+    </style>
+</head>
+<body>
+    <!-- vue-app 是根容器 -->
+    <div id="vue-app">
+        <h1>Event</h1>
+        <button @click="addNumber(1)">add 1 number</button>
+        <button v-on:click="minusNumber(1)">minus 1 number</button>
+        <button @dblclick="addNumber(10)">add 10 number</button>
+        <button v-on:dblclick="minusNumber(10)">minus 10 number</button>
+        <p>The number is : {{number}}</p>
+        <div id="canvas" @mousemove="updateXY">
+            {{x}},{{y}} - <span v-on:mousemove="stopMoving">Stop Moving</span>
+        </div>
+    </div>
+    <script src="./app.js"></script>
+</body>
+</html>
