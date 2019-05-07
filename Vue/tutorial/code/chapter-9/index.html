@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue.js</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <style>
+        span {
+            background: red;
+            display: inline-block;
+            padding: 10px;
+            color: #fff;
+            margin: 10px 0;
+        }
+        .changeColor span{
+            background: green;
+        }
+        .changeLength span {
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <!-- vue-app 是根容器 -->
+    <div id="vue-app">
+        <h1>动态CSS CLASS</h1>
+        <h2>CASE 1</h2>
+        <div v-on:click="changeColor = !changeColor" v-bind:class="{changeColor: changeColor}">
+            <span>Henry</span>
+        </div>
+        <h2 v-bind:class="">CASE 2</h2>
+        <button v-on:click="changeColor = !changeColor">Change color</button>
+        <button v-on:click="changeLength = !changeLength">Change length</button>
+        <div v-on:click="changeLength = !changeLength" v-bind:class="compClasses">
+            <span>Henry</span>
+        </div>
+    </div>
+    <script src="./app.js"></script>
+</body>
+</html>
