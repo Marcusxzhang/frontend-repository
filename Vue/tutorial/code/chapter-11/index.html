@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue.js</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <!-- vue-app 是根容器 -->
+    <div id="vue-app">
+        <h1>v-for 循环</h1>
+        <ul>
+            <li v-for="character in characters">
+                {{character}}
+            </li>
+        </ul>
+        <ul>
+            <li v-for="(user,index) in users">
+                {{index+1}}. {{user.name}} - {{user.age}}
+            </li>
+        </ul>
+    </div>
+    <script src="./app.js"></script>
+</body>
+</html>

@@ -1,5 +1,6 @@
 # Knowledge #
 List:  
+* [前端自检清单](https://github.com/Marcusxzhang/frontend-repository/blob/master/Knowledge/Wiki/frontend-self-check.md)
 * Frontend
   * [JavaScript - Map, Reduce, Filter数组方法](https://github.com/Marcusxzhang/frontend-repository/blob/master/Knowledge/Wiki/map-reduce-filter.md)
   * [Development - 前端存储 - localStorage](https://github.com/Marcusxzhang/frontend-repository/blob/master/Knowledge/Wiki/localstorage.md)

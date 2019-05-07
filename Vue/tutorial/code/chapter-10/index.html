@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue.js</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <!-- vue-app 是根容器 -->
+    <div id="vue-app">
+        <h1>v-if 条件</h1>
+        <button v-on:click="error = !error">toggle error</button>
+        <button v-on:click="success = !success">toggle success</button>
+        <p v-if="error">网络连接错误： 404</p>
+        <p v-else-if="success">网络连接成功：200</p>
+        <p v-show="error">网络连接错误： 404</p>
+        <p v-show="success">网络连接成功：200</p>
+    </div>
+    <script src="./app.js"></script>
+</body>
+</html>
