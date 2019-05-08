@@ -12,6 +12,7 @@ List:
 * Infrastruture
   * [从前端角度看企业软件的研发过程](https://github.com/Marcusxzhang/frontend-repository/blob/master/Knowledge/Wiki/software-development-procedure.md)
   * [IaaS, PaaS, SaaS](https://github.com/Marcusxzhang/frontend-repository/blob/master/Knowledge/Wiki/ips.md)
+  * [微服务实战系列文章](https://github.com/Marcusxzhang/frontend-repository/blob/master/Knowledge/Wiki/microservice.md)
 
 ## Cloud computing ##
 This is the [link](https://github.com/Marcusxzhang/frontend-repository/blob/master/Knowledge/Wiki/cloud-computing.md)
