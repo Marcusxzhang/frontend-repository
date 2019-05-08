@@ -211,8 +211,84 @@ export default {
 这样就会自动产生一个独特的标志。  
   
 ## 属性传值Props ##
-
+Vue有两种传值方式：  
+* 子组件和父组件传值
+* 父组件对子组件传值
+  
+在父组件里定义变量，然后使用`v-bind:xxx="xxx"`。然后在组子组件里，使用`props:["xxx"]`里面调用。  
+同时也可以这样写（官方写法）：  
+```javascript
+props: {
+    xxx: {
+        type: Array,
+        required: true
+    },
+    //...
+}
+```  
+  
 ## 传值和传引用 ##
+传值可以传两个东西：
+* 具体值 (string number boolean等)
+* 引用（一般是数组和对象）
+  
+值得注意的是，如果改变了值，那所有引用的数据都会消失不见。  
+  
 ## 事件传值（子传父） ##
+在子组件里，先在`methods`里面注册`this.$emit("xxx","参数");`。  
+然后在父组件里，在html里面绑定`v-on:xxx="...($event)";`。然后在`methods里面定义xxx函数`。  
+  
 ## 生命周期钩子 ##
+生命周期可以**找问题**，也可以**解决需求**。  
+  
+![life-cyrcle](https://cn.vuejs.org/images/lifecycle.png "life-cycle")  
+  
+一共有这么个钩子函数：  
+* beforeCreate ： 组件实例化之前执行的函数
+* created ： 组件实例化完毕，但页面还未显示
+* beforeMount ： 组件挂载前，页面仍未展示，但虚拟Dom已经配粥
+* mounted ： 组件挂载后，此方法执行后，页面展示
+* beforeUpdate ： 组件更新前， 页面仍未更新，虚拟DOM已经配置
+* updated ： 组建更新，此方法执行后，页面展示
+* beforeDestory ： 组件销毁前，页面仍未展示，但虚拟DOM已经配置
+* destoryed ： 组件销毁
+  
 ## 路由和请求 ##
+之前我们是使用a标签的`href`来实现跳转，现在我们用的原理一样，但是进行了优化。不需要跳转不需要请求，直接跳转。  
+  
+要安装路由模块的话，命令行`npm install vue-router --save-dev`。然后在`main.js`引用router模块。  
+```javascript
+import VueRouter from 'vue-router';
+
+Vue.use(VueRouter);
+
+const router = new VueRouter({
+    routes: [
+        {path:"/", component: xxx},
+        // ...
+    ],
+    mode: "history" // 会影响路径上的/#/问题
+})
+
+new Vue({
+    router,
+    // ...
+})
+```  
+  
+值得注意的是，如果我们在跳转的实现中，使用了a标签，虽然不会转，可是还是会刷新加载。最好的方法是使用`<router-view to="..."></router-view>`。  
+  
+如果我们需要请求，则在命令行里写`npm install vue-resource --save-dev`。然后在`main.js`引用Resource模块。  
+```javascript
+import VueResource from 'vue-resource';
+
+Vue.use(VueResource);
+
+new Vue({
+    created() {
+        this.$http.get("...").then((data) => {
+            console.log(data);
+        });
+    }
+})
+```  
