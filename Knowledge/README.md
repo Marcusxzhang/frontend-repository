@@ -5,6 +5,7 @@ List:
   * [JavaScript - Map, Reduce, Filter数组方法](https://github.com/Marcusxzhang/frontend-repository/blob/master/Knowledge/Wiki/map-reduce-filter.md)
   * [Development - 前端存储 - localStorage](https://github.com/Marcusxzhang/frontend-repository/blob/master/Knowledge/Wiki/localstorage.md)
   * [Development - LocalStorage还能这么用](https://github.com/Marcusxzhang/frontend-repository/blob/master/Knowledge/Wiki/localstorage-extra-used.md)
+  * [如何通过数据劫持实现mvvm框架](https://github.com/Marcusxzhang/frontend-repository/blob/master/Knowledge/Wiki/databinding-mvvm.md)
 * Network
   * [HTTP Request](https://github.com/Marcusxzhang/frontend-repository/blob/master/Knowledge/Wiki/http-request.md)
   * [为什么 HTTPS 比 HTTP 更安全?](https://github.com/Marcusxzhang/frontend-repository/blob/master/Knowledge/Wiki/http-https.md)
