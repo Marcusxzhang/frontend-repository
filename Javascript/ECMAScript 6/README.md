@@ -66,6 +66,25 @@ http://es6.ruanyifeng.com/#README
 #### rest参数 ####
 #### 严格模式 ####
 #### name属性 ####
+函数的`name`属性，返回该函数的函数名。  
+```javascript
+function foo() {}
+foo.name // "foo"
+```  
+  
+其中，在ES5里面，匿名函数会显示不了名字，但常量一直都可以。  
+```javascript
+var a = function() {}
+const b = function() {}
+
+// ES5
+a.name // ""
+b.name // "b"
+// ES6
+a.name // "a"
+b.name // "b"
+```  
+  
 #### 箭头函数 ####
 ES6允许使用箭头`=>`定义函数。  
 ```javascript
@@ -122,6 +141,33 @@ var sum = function(num1, num2) {
 #### Set ####
 #### WeakSet ####
 #### Map ####
+传统的JavaScript的结构是键值对的，可是新的Map结构却是值对值的概念。  
+```javascript
+const map = new Map([
+    ['name', '张三'],
+    ['title', 'Author']
+]);
+
+map.size // 2
+map.has('name'); // true
+map.get('name'); // "张三"
+map.has('title'); // true
+map.get('title'); // "Author"
+```  
+实际上是这个算法  
+```javascript
+const items = [
+    ['name' : '张三'],
+    ['title', 'Author']
+];
+
+const map = new Map();
+
+items.foreach(
+    ([key, value]) => map.set(key, value);
+);
+```  
+
 #### WeakMap ####
 ## Proxy ##
 ## Reflect ##
@@ -396,6 +442,12 @@ run(g);
 #### 实例：按顺序完成异步操作 ####
 #### 异步遍历器 ####
 ## Class的基本语法 ##
+#### 简介 ####
+#### 静态方法 ####
+#### 实例属性的新写法 ####
+#### 静态属性 ####
+#### 私有方法和私有属性 ####
+#### new.target方法 ####
 ## Class的继承 ##
 ## Module的语法 ##
 ## Module的加载实现 ##
